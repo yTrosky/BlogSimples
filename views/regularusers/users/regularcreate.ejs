@@ -7,9 +7,13 @@
             <h2>Criação de usuário</h2>
         </div>
         <div class="card-body">
-            <form action="/users/create" method="POST">
+            <form action="/regularusers/create" method="POST">
+                <input class="form-control" name="name" type="text" placeholder="Seu nome:"><br>
+                <input class="form-control" name="age" type="number" placeholder="Sua idade:"><br>
+                <input class="form-control" name="address" type="text" placeholder="Seu endereço:"><br>
                 <input class="form-control" name="email" type="email" placeholder="email@exemplo.com"><br>
                 <input class="form-control" name="password" type="password" placeholder="******"><br>
+
                 <button type="submit" class="btn btn-success btn-block">Criar</button>
             </form>
         </div>

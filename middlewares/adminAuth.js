@@ -5,5 +5,4 @@ function adminAuth(req, res, next){
        res.redirect("/login");
    }
 }
-
 module.exports = adminAuth
