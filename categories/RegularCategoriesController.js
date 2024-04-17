@@ -1,17 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const Category = require("./Category");
+const RegularCategory = require("./RegularCategory");
 const slugify = require("slugify");
 
 router.get("/regularusers/categories/new",(req, res) => {
     res.render("regularusers/categories/new");
 });
 
-router.post("/categories/save", (req, res) => {
+router.post("/regularcategories/save", (req, res) => {
     var title = req.body.title;
     if(title != undefined){
         
-        Category.create({
+        RegularCategory.create({
             title: title,
             slug: slugify(title)
         }).then(() => {
@@ -24,16 +24,16 @@ router.post("/categories/save", (req, res) => {
 });
 
 router.get("/regularusers/categories",  (req, res) => {
-    Category.findAll().then(categories => {
-        res.render("regularusers/categories/index", {categories: categories});
+    RegularCategory.findAll().then(regularcategories => {
+        res.render("regularusers/categories/index", {regularcategories: regularcategories});
     });
 });
 
-router.post("/categories/delete", (req, res) => {
+router.post("/regularcategories/delete", (req, res) => {
     var id = req.body.id;
     if(id != undefined){
         if(!isNaN(id)){
-            Category.destroy({
+            RegularCategory.destroy({
                 where: {
                     id: id
                 }
@@ -55,9 +55,9 @@ router.get("/regularusers/categories/edit/:id", (req, res) => {
         res.redirect("/regularusers/categories"); 
     }
 
-    Category.findByPk(id).then(category => {
-        if(category != undefined){
-            res.render("regularusers/categories/edit",{category: category});
+    RegularCategory.findByPk(id).then(regularcategory => {
+        if(regularcategory != undefined){
+            res.render("regularusers/categories/edit",{regularcategory: regularcategory});
         }else{
             res.redirect("/regularusers/categories");
         }
@@ -66,11 +66,11 @@ router.get("/regularusers/categories/edit/:id", (req, res) => {
     })
 });
 
-router.post("/categories/update", (req, res) => {
+router.post("/regularcategories/update", (req, res) => {
     var id = req.body.id;
     var title = req.body.title;
 
-    Category.update({title: title, slug: slugify(title) },{
+    RegularCategory.update({title: title, slug: slugify(title) },{
         where: {
             id: id
         }

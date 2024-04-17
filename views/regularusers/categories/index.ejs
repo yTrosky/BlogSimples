@@ -1,5 +1,5 @@
 <%- include ('../../partials/header.ejs') %>
-<%- include ('../../partials/navbar.ejs') %>
+<%- include ('../../partials/regularnavbar.ejs') %>
 <div class="container">
     <hr>
     <h2>Categorias</h2>
@@ -15,16 +15,16 @@
             </tr>
         </thead>
         <tbody>
-            <% categories.forEach(category => { %>
+            <% regularcategories.forEach(regularcategory => { %>
                 <tr>
-                    <th><%= category.id %></th>
-                    <th><%= category.title %></th>
-                    <th><%= category.slug %></th>
+                    <th><%= regularcategory.id %></th>
+                    <th><%= regularcategory.title %></th>
+                    <th><%= regularcategory.slug %></th>
                     <th>
-                        <a href="/regularusers/categories/edit/<%= category.id %>" class="btn btn-warning">Editar</a>
+                        <a href="/regularusers/categories/edit/<%= regularcategory.id %>" class="btn btn-warning">Editar</a>
                         
-                        <form method="POST" action="/categories/delete" style="display: inline;" onsubmit="confirmarDelecao(event, this)">
-                            <input type="hidden" name="id" value="<%= category.id %>">
+                        <form method="POST" action="/regularcategories/delete" style="display: inline;" onsubmit="confirmarDelecao(event, this)">
+                            <input type="hidden" name="id" value="<%= regularcategory.id %>">
                             <button class="btn btn-danger">Deletar</button>
                         </form>
                     

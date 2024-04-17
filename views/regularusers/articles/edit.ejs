@@ -1,5 +1,5 @@
 <%- include ('../../partials/header.ejs') %>
-<%- include ('../../partials/navbar.ejs') %>
+<%- include ('../../partials/regularnavbar.ejs') %>
 
 <div class="container">
     <hr>
@@ -8,17 +8,17 @@
             <h2>Editar artigo</h2>
         </div>
         <div class="card-body">
-            <form method="POST" action="/articles/update">
-                <input type="hidden" value="<%= article.id %>" name="id">
-                <input class="form-control" type="text" name="title" placeholder="Defina o título do artigo" value="<%= article.title %>"><br>
-                <textarea class="form-control" placeholder="Escreva o artigo aqui!" name="body" id="article"></textarea><br>
+            <form method="POST" action="/regulararticles/update">
+                <input type="hidden" value="<%= regulararticle.id %>" name="id">
+                <input class="form-control" type="text" name="title" placeholder="Defina o título do artigo" value="<%= regulararticle.title %>"><br>
+                <textarea class="form-control" placeholder="Escreva o artigo aqui!" name="body" id="regulararticle"></textarea><br>
                 <label>Categoria</label>
                 <select name="category" class="form-control">
-                    <% categories.forEach((category) => { %>
-                        <% if(category.id == article.categoryId) { %> 
-                            <option value="<%= category.id %>" selected><%= category.title %></option>
+                    <% regularcategories.forEach((regularcategory) => { %>
+                        <% if(regularcategory.id == regulararticle.regularcategoryId) { %> 
+                            <option value="<%= regularcategory.id %>" selected><%= regularcategory.title %></option>
                         <% } else { %>
-                            <option value="<%= category.id %>"><%= category.title %></option>
+                            <option value="<%= regularcategory.id %>"><%= regularcategory.title %></option>
                         <% } %>   
                     <% }) %>
                 </select>
@@ -30,7 +30,7 @@
 </div>
 
 <div id="content" style="display: none;">
-    <%- article.body %>
+    <%- regulararticle.body %>
 </div>
 
 
@@ -42,13 +42,13 @@
 
     tinymce.init({
         language: 'pt_BR',
-        selector: "#article",
+        selector: "#regulararticle",
         activeEditor: true,
         plugins: [
             'advlist autolink link image lists print preview hr searchreplace wordcount fullscreen insertdatetime media save table paste emoticons'
         ],
         init_instance_callback: () => {
-            tinymce.get("article").setContent($("#content").html())
+            tinymce.get("regulararticle").setContent($("#content").html())
         }
     })
 

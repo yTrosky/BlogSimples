@@ -1,8 +1,8 @@
 function regularusersAuth(req, res, next){
-    if(req.session.user != undefined){
+    if(req.session.regularusers != undefined){
         next();
     }else{
-        res.redirect("/login");
+        res.redirect("/regularlogin");
     }
  }
  module.exports = regularusersAuth

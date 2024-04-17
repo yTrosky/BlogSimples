@@ -1,45 +1,45 @@
 const express = require("express");
 const router = express.Router();
-const Category = require("../categories/Category");
-const Article = require("./Article");
+const RegularCategory = require("../categories/RegularCategory");
+const RegularArticle = require("./RegularArticle");
 const slugify = require("slugify");
-const regularusersAuth = require("../middlewares/regularusersAuth");
+const regularuserAuth = require("../middlewares/regularuserAuth");
 
-router.get("/regularusers/articles", regularusersAuth ,(req, res) => {
-    Article.findAll({
-        include: [{model: Category}]
-    }).then(articles => {
-        res.render("regularusers/articles/index",{articles: articles})
+router.get("/regularusers/articles", regularuserAuth ,(req, res) => {
+    RegularArticle.findAll({
+        include: [{model: RegularCategory}]
+    }).then(regulararticles => {
+        res.render("regularusers/articles/index",{regulararticles: regulararticles})
     });
 });
 
-router.get("/regularusers/articles/new", regularusersAuth ,(req ,res) => {
-    Category.findAll().then(categories => {
-        res.render("regularusers/articles/new",{categories: categories})
+router.get("/regularusers/articles/new", regularuserAuth ,(req ,res) => {
+    RegularCategory.findAll().then(regularcategories => {
+        res.render("regularusers/articles/new",{regularcategories: regularcategories})
     })    
 })
 
-router.post("/articles/save", regularusersAuth, (req, res) => {
+router.post("/regulararticles/save", regularuserAuth, (req, res) => {
     var title = req.body.title;
     var body = req.body.body;
-    var category = req.body.category;
+    var regularcategory = req.body.regularcategory;
 
-    Article.create({
+    RegularArticle.create({
         title: title,
         slug: slugify(title),
         body: body,
-        categoryId: category
+        regularcategoryId: regularcategory
     }).then(() => {
         res.redirect("/regularusers/articles");
     });
 });
 
 
-router.post("/articles/delete", reguarusersAuth , (req, res) => {
+router.post("/regulararticles/delete", regularuserAuth , (req, res) => {
     var id = req.body.id;
     if(id != undefined){
         if(!isNaN(id)){
-            Article.destroy({
+            RegularArticle.destroy({
                 where: {
                     id: id
                 }
@@ -54,12 +54,12 @@ router.post("/articles/delete", reguarusersAuth , (req, res) => {
     }
 });
 
-router.get("/regularusers/articles/edit/:id", adminAuth , (req, res) => {
+router.get("/regularusers/articles/edit/:id", regularuserAuth , (req, res) => {
     var id = req.params.id;
-    Article.findByPk(id).then(article => {
-        if(article != undefined){
-            Category.findAll().then(categories => {
-                res.render("regularusers/articles/edit", {categories: categories, article: article})
+    RegularArticle.findByPk(id).then(regulararticle => {
+        if(regulararticle != undefined){
+            Category.findAll().then(regularcategories => {
+                res.render("regularusers/articles/edit", {regularcategories: regularcategories, regulararticle: regulararticle})
 
             });
         }else{
@@ -70,13 +70,13 @@ router.get("/regularusers/articles/edit/:id", adminAuth , (req, res) => {
     });
 });
 
-router.post("/articles/update", adminAuth, (req, res) => {
+router.post("/regulararticles/update", regularuserAuth, (req, res) => {
     var id = req.body.id;
     var title = req.body.title;
     var body = req.body.body;
-    var category = req.body.category
+    var regularcategory = req.body.regularcategory
 
-    Article.update({title: title, body: body, categoryId: category, slug:slugify(title)},{
+    RegularArticle.update({title: title, body: body, categoryId: regularcategory, slug:slugify(title)},{
         where: {
             id: id
         }
@@ -87,7 +87,7 @@ router.post("/articles/update", adminAuth, (req, res) => {
     });
 });
 
-router.get("/articles/page/:num",(req, res) => {
+router.get("/regulararticles/page/:num",(req, res) => {
     var page = req.params.num;
     var offset = 0;
 
@@ -97,12 +97,12 @@ router.get("/articles/page/:num",(req, res) => {
         offset = (parseInt(page) - 1) * 4;
     }
 
-    Article.findAndCountAll({
+    RegularArticle.findAndCountAll({
         limit: 4,
         offset: offset,
-    }).then(articles => {
+    }).then(regulararticles => {
         var next;
-        if(offset + 4 >= articles.count){
+        if(offset + 4 >= regulararticles.count){
             next = false;
         }else{
             next = true;
@@ -111,11 +111,11 @@ router.get("/articles/page/:num",(req, res) => {
         var result = {
             page: parseInt(page),
             next: next,
-            articles : articles
+            regulararticles : regulararticles
         }
 
-        Category.findAll().then(categories => {
-            res.render("regularusers/articles/page",{result: result, categories: categories})
+        RegularCategory.findAll().then(regularcategories => {
+            res.render("regularusers/articles/page",{result: result, regularcategories: regularcategories})
         });
     })
 

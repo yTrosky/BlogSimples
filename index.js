@@ -5,13 +5,18 @@ const session = require("express-session");
 const connection = require("./database/database");
 
 const categoriesController = require("./categories/CategoriesController");
+const regularCategoriesController = require("./categories/RegularCategoriesController");
 const articlesController = require("./articles/ArticlesController");
+const regularArticlesController = require("./articles/RegularArticlesController");
 const usersController = require("./users/UsersController");
 const regularUsersController = require("./users/RegularUsersControllers");
 
 const Article = require("./articles/Article");
+const RegularArticle = require("./articles/RegularArticle");
 const Category = require("./categories/Category");
+const RegularCategory = require("./categories/RegularCategory");
 const User = require("./users/User");
+const RegularUsers = require("./users/RegularUser");
 
 // View engine
 app.set('view engine','ejs');
@@ -40,8 +45,10 @@ connection
     })
 
 
-app.use("/",categoriesController);    
+app.use("/",categoriesController);   
+app.use("/",regularCategoriesController); 
 app.use("/",articlesController);
+app.use("/",regularArticlesController);
 app.use("/",usersController);
 app.use("/",regularUsersController);
 
@@ -54,7 +61,23 @@ app.get("/", (req, res) => {
         limit: 4
     }).then(articles => {
         Category.findAll().then(categories => {
-            res.render("index", {articles: articles, categories: categories});
+            res.render("index", {articles: articles,
+                                 categories: categories});
+        });
+    });
+})
+
+
+app.get("/", (req, res) => {
+    RegularArticle.findAll({
+        order:[
+            ['id','DESC']
+        ],
+        limit: 4
+    }).then(regulararticles => {
+        RegularCategory.findAll().then(regularcategories => {
+            res.render("index", {regulararticles: regulararticles,
+                                 regularcategories: regularcategories});
         });
     });
 })
@@ -78,6 +101,27 @@ app.get("/:slug",(req, res) => {
     });
 })
 
+app.get("/:slug",(req, res) => {
+    var slug = req.params.slug;
+    RegularArticle.findOne({
+        where: {
+            slug: slug
+        }
+    }).then(regulararticle => {
+        if(regulararticle != undefined){
+            RegularCategory.findAll().then(regularcategories => {
+                res.render("regulararticle", {regulararticle: regulararticle,
+                                              regularcategories: regularcategories});
+            });
+        }else{
+            res.redirect("/");
+        }
+    }).catch( err => {
+        res.redirect("/");
+    });
+})
+
+
 app.get("/category/:slug",(req, res) => {
     var slug = req.params.slug;
     Category.findOne({
@@ -89,6 +133,26 @@ app.get("/category/:slug",(req, res) => {
         if(category != undefined){
             Category.findAll().then(categories => {
                 res.render("index",{articles: category.articles,categories: categories});
+            });
+        }else{
+            res.redirect("/");
+        }
+    }).catch( err => {
+        res.redirect("/");
+    })
+})
+
+app.get("/regularcategory/:slug",(req, res) => {
+    var slug = req.params.slug;
+    RegularCategory.findOne({
+        where: {
+            slug: slug
+        },
+        include: [{model: RegularArticle}]
+    }).then( regularcategory => {
+        if(regularcategory != undefined){
+            RegularCategory.findAll().then(regularcategories => {
+                res.render("index",{regulararticles: regularcategory.regulararticles,regularcategories: regularcategories});
             });
         }else{
             res.redirect("/");
