@@ -5,7 +5,7 @@ const RegularArticle = require("./RegularArticle");
 const slugify = require("slugify");
 const regularuserAuth = require("../middlewares/regularuserAuth");
 
-router.get("/regularusers/articles", regularuserAuth ,(req, res) => {
+router.get("/regularusers/articles", regularuserAuth ,(req, res) => {   
     RegularArticle.findAll({
         include: [{model: RegularCategory}]
     }).then(regulararticles => {
@@ -58,7 +58,7 @@ router.get("/regularusers/articles/edit/:id", regularuserAuth , (req, res) => {
     var id = req.params.id;
     RegularArticle.findByPk(id).then(regulararticle => {
         if(regulararticle != undefined){
-            Category.findAll().then(regularcategories => {
+            RegularCategory.findAll().then(regularcategories => {
                 res.render("regularusers/articles/edit", {regularcategories: regularcategories, regulararticle: regulararticle})
 
             });
@@ -76,7 +76,7 @@ router.post("/regulararticles/update", regularuserAuth, (req, res) => {
     var body = req.body.body;
     var regularcategory = req.body.regularcategory
 
-    RegularArticle.update({title: title, body: body, categoryId: regularcategory, slug:slugify(title)},{
+    RegularArticle.update({title: title, body: body, regularcategoryId: regularcategory, slug:slugify(title)},{
         where: {
             id: id
         }

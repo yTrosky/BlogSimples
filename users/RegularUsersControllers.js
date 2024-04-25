@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Regularusers = require("./RegularUser");
 const bcrypt = require('bcryptjs');
+const regularuserAuth = require("../middlewares/regularuserAuth");
 
 router.get("/regularusers/users", (req, res) => {
     Regularusers.findAll().then(regularusers => {
@@ -44,6 +45,24 @@ router.post("/regularusers/create", (req, res) => {
     });
 });
 
+router.post("/regularusers/regulardelete",(req, res) => {
+    var id = req.body.id;
+    if(id != undefined){
+        if(!isNaN(id)){
+            Regularusers.destroy({
+                where: {
+                    id: id
+                }
+            }).then(() => {
+                res.redirect("/admin/users");
+            });
+        }else{// NÃO FOR UM NÚMERO
+            res.redirect("/admin/users");
+        }
+    }else{ // NULL
+        res.redirect("/admin/users");
+    }
+});
 
 router.get("/regularusers/regularlogin", (req, res) => {
     res.render("regularusers/users/regularlogin");

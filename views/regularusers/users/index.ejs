@@ -3,8 +3,7 @@
 
 <div class="container">
         <hr>
-        <h2>Admins</h2>
-        <a class="btn btn-success" href="/admin/users/create">Criar novo usuário</a>
+        <h2>Usuários comuns</h2>
         <hr>
         <table class="table table-bordered">
             <thead>
@@ -14,17 +13,15 @@
                 </tr>
             </thead>
             <tbody>
-                <% users.forEach(user => { %>
+                <% regularusers.forEach(regularuser => { %>
                     <tr>
-                        <td><%= user.id %></td>
-                        <td><%= user.email %></td>
-                    
+                        <td><%= regularuser.id %></td>
+                        <td><%= regularuser.email %></td>
                     <td>
-                        <a href="/admin/users/edit/<%= user.id %>"
-                            class="btn btn-warning">Editar</a>
-                        <form method="POST" action="/users/delete" style="display: inline;"
+                        
+                        <form method="POST" action="/regularusers/regulardelete" style="display: inline;"
                             onsubmit="confirmarDelecao(event, this)">
-                            <input type="hidden" name="id" value="<%= user.id %>">
+                            <input type="hidden" name="id" value="<%= regularuser.id %>">
                             <button class="btn btn-danger">Deletar</button>
                         </form>
                     </td>
@@ -33,7 +30,6 @@
             </tbody>
         </table>
 </div>
-
 
 <%- include ('../../partials/footer.ejs') %>
 
